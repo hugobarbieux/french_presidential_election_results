@@ -159,5 +159,5 @@ df = df.rename(columns={'Election|Scrutin|Type':'type',
                         'Election|Departement|Communes|Commune|Tours|Tour|Resultats|Candidats|Candidat|RapportInscrit':'% voix/inscrits'})
 
 # Export dataframe as csv file
-with open(path, 'w', encoding = 'utf-8') as f:
-  df.to_csv(f, index=False)
+df.to_csv('elex.csv', encoding = 'utf-8')
+files.download('elex_t1_sub_com.csv')
