@@ -3,16 +3,12 @@ import pandas as pd
 import pandas_read_xml as pdx
 import re
 
-
 # Elements constituant la base de l'URL
-
 url_base = 'https://www.resultats-elections.interieur.gouv.fr/telechargements/PR2022/resultatsT'
 tour = '1'
 #tour = '2'
 
-
 # Define regions and their ID codes plus departments codes in dictionaries
-
 regions = {
     'etranger': '000',
     'guadeloupe': '001',
@@ -39,7 +35,7 @@ regions = {
 #  print(i)
 
 departements = {
-    'etranger': ['975','977','986','987','988'], # 099 construit une URL qui ne repond pas a la construction de base, sera ajoute apres
+    'etranger': ['975','977','986','987','988'], # 099 to ba added later on this script
     'guadeloupe': ['971'],
     'martinique': ['972'],
     'guyane': ['973'],
@@ -62,7 +58,6 @@ departements = {
 
 
 # Quick check on departments number
-
 # for value in departements.values():
 #   print(len(value))
 
@@ -75,10 +70,7 @@ departements = {
 # for key, values in departements.items():
 #   print(key+': '+str(len(values))+' departements')
 
-
 # Generate URL's based on dictionaries infos
-*Voir question ici : [StackOverflow](https://stackoverflow.com/questions/71914668/build-urls-by-iterating-through-multiple-dictionaries-in-python/71914727#71914719)*
-
 urls = []
 
 for reg, reg_code in regions.items():
@@ -88,21 +80,16 @@ for reg, reg_code in regions.items():
 #print(urls)
 #print(len(urls))
 
-
 # Alternative method
-
 # base = "https://www.resultats-elections.interieur.gouv.fr/telechargements/PR2022/resultatsT{}/{}/{}/{}{}"
 # urls = [base.format(tour, dept, subdept, subdept, 'com.xml') for region, dept in regions.items() for subdept in departements[region]]
 # print(urls)
 
-
 # French living abroad (slightly different form of URL, can be done manually)
-
 fr_etranger_url = ['https://www.resultats-elections.interieur.gouv.fr/telechargements/PR2022/resultatsT1/000/099/099.xml']
 
 
 # List of all URL's
-
 urls_all = urls+fr_etranger_url
 
 # Print last 10 items of the list
@@ -110,7 +97,6 @@ urls_all = urls+fr_etranger_url
 #print(len(urls_all))
 # Print n items randomly
 #print(random.sample(urls, 10))
-
 
 # Convert XML data into a more efficient dataframe
 # Check if column number is identical for every dataframe
@@ -122,7 +108,7 @@ for i in urls:
   substring = re.search(pattern, i).group(1)
   print(substring+" : "+str(len(df.columns)))
 
-
+    
 dfs = []
 
 #for i in urls_list:
@@ -133,9 +119,8 @@ for i in urls:
 
 df = pd.concat(dfs)
 
-
 # Rename the columns
-
+# See the original column names
 #cols = list(df)
 #cols
 
@@ -173,8 +158,6 @@ df = df.rename(columns={'Election|Scrutin|Type':'type',
                         'Election|Departement|Communes|Commune|Tours|Tour|Resultats|Candidats|Candidat|RapportExprime':'rapport_exprimes',
                         'Election|Departement|Communes|Commune|Tours|Tour|Resultats|Candidats|Candidat|RapportInscrit':'rapport_inscrits'})
 
-
 # Export dataframe as csv file
-
 with open(path, 'w', encoding = 'utf-8') as f:
   df.to_csv(f, index=False)
